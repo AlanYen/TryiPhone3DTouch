@@ -8,15 +8,41 @@
 
 #import "AppDelegate.h"
 
+@class UIApplicationShortcutItem;
+
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
 
+- (void)handleShortCutItem:(UIApplicationShortcutItem *)shortcutItem {
+    [[[UIAlertView alloc] initWithTitle:@""
+                                message:@"handleShortCutItem"
+                               delegate:nil
+                      cancelButtonTitle:@"確認"
+                      otherButtonTitles:nil] show];
+}
+
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void(^)(BOOL succeeded))completionHandler{
+    
+    [self handleShortCutItem:shortcutItem];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+
+    //
+    // http://blog.ringcentral.cn/2015/10/how-to-support-3d-touch-static-action-on-xcode6/
+    //
+    
+    BOOL shouldPerformAdditionalDelegateHandling = YES;
+    /* please replace the true value of UIApplicationLaunchOptionsShortcutItemKey from Xcode7 */
+    if (launchOptions && [launchOptions objectForKey: @"UIApplicationLaunchOptionsShortcutItemKey"]) {
+        shouldPerformAdditionalDelegateHandling = NO;
+        [self handleShortCutItem: [launchOptions objectForKey: @"UIApplicationLaunchOptionsShortcutItemKey"]];
+        return shouldPerformAdditionalDelegateHandling;
+    }
+    
     return YES;
 }
 
